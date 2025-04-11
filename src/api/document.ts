@@ -126,6 +126,21 @@ export type TypeDocument = {
   subject?: TypeSubject;
   university?: TypeUniversity;
   user?: TypeUser;
+  documentCategories: DocumentCategoryType[];
+};
+
+export type DocumentCategoryType = {
+  documentId?: number;
+  categoryId?: number;
+  category?: TypeCategory;
+};
+
+export type TypeCategory = {
+  id?: number;
+  name?: string;
+  status?: UserStatusType;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export { injectedRtkApi as DocumentApi };

@@ -3,7 +3,7 @@ import { Layout, Typography } from "antd";
 import { InitialType, useUrlSearchParams } from "use-url-search-params";
 
 import PageContainer from "@/layouts/PageContainer";
-import TableData from "./TableData";
+import DocumentList from "./DocumentList";
 
 const { Content } = Layout;
 
@@ -25,11 +25,11 @@ const DocumentPage = () => {
         <Layout style={{ minHeight: "100vh" }}>
           <Content style={{ padding: "16px" }}>
             <Typography.Title level={5} className="uppercase mb-4">
-              Quản lý tài liệu
+              Danh sách tài liệu
             </Typography.Title>
 
             <Layout>
-              <TableData />
+              <DocumentList />
             </Layout>
           </Content>
         </Layout>
