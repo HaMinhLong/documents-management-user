@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Dropdown, Layout, MenuProps, Space } from "antd";
+import { Avatar, Dropdown, Input, Layout, MenuProps, Space } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -16,6 +16,7 @@ import { handleGetFile } from "@/utils";
 import { logout } from "@/features/auth/auth.slice";
 
 const { Content, Footer } = Layout;
+const { Search } = Input;
 
 interface PropsType {
   children: React.ReactNode;
@@ -54,21 +55,36 @@ const PageContainer = ({ children }: PropsType) => {
           <img width="180" height="80" className="logo" src={logoPage} alt="" />
         </Link>
 
-        <div className="flex flex-end p-[10px] z-[1001] cursor-pointer">
-          <Dropdown menu={{ items }} placement="bottom">
-            <Space>
-              <Avatar
-                src={handleGetFile(user?.avatar || "")}
-                icon={!user?.avatar && <UserOutlined />}
-              />
-              <span style={{ cursor: "pointer" }}>{user?.username || ""}</span>
-            </Space>
-          </Dropdown>
+        <div className="flex-1 mx-4">
+          <Search
+            placeholder="Tìm kiếm tài liệu, môn học..."
+            onSearch={(value) => console.log(value)}
+            style={{ width: 300 }}
+            enterButton
+            className="[&_input]:h-8"
+          />
         </div>
+
+        <SiderPage />
+
+        {user && (
+          <div className="flex flex-end p-[10px] z-[1001] cursor-pointer">
+            <Dropdown menu={{ items }} placement="bottom">
+              <Space>
+                <Avatar
+                  src={handleGetFile(user?.avatar || "")}
+                  icon={!user?.avatar && <UserOutlined />}
+                />
+                <span style={{ cursor: "pointer" }}>
+                  {user?.username || ""}
+                </span>
+              </Space>
+            </Dropdown>
+          </div>
+        )}
       </div>
 
       <Layout>
-        <SiderPage />
         <Content style={{ overflow: "initial" }}>
           <div className="bg-[#eee]">{children}</div>
           <Footer style={{ textAlign: "center" }}>

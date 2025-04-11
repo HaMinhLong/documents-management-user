@@ -1,63 +1,59 @@
 import React from "react";
 import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
-import { SettingOutlined } from "@ant-design/icons";
 
 import "./index.css";
 
-const { Sider } = Layout;
+const { Header } = Layout;
 
 const HeaderPage = () => {
-  const siderStyle: React.CSSProperties = {
-    overflow: "auto",
-    height: "100vh",
+  const headerStyle: React.CSSProperties = {
     position: "sticky",
-    insetInlineStart: 0,
     top: 0,
-    bottom: 0,
-    scrollbarWidth: "thin",
-    scrollbarGutter: "stable",
+    zIndex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    background: "#fff",
   };
 
   const menuItems = [
     {
-      key: "user_management",
-      label: <Link to="/account-setting/user">Quản lý người dùng</Link>,
+      key: "document",
+      label: <Link to="/document">Tài liệu</Link>,
     },
     {
-      label: "Quản lý danh mục",
-      key: "category_system",
-      icon: <SettingOutlined />,
-      children: [
-        {
-          label: <Link to="/category-setting/university">Trường học</Link>,
-          key: "university",
-        },
-        {
-          label: <Link to="/category-setting/subject">Môn học</Link>,
-          key: "subject",
-        },
-      ],
+      key: "school",
+      label: <Link to="/school">Trường học</Link>,
     },
     {
-      key: "document_management",
-      label: <Link to="/document">Quản lý tài liệu</Link>,
+      key: "subject",
+      label: <Link to="/subject">Môn học</Link>,
     },
     {
-      key: "transaction_management",
-      label: <Link to="/transaction">Quản lý nạp tiền</Link>,
+      key: "category",
+      label: <Link to="/category">Chuyên ngành</Link>,
+    },
+    {
+      key: "recharge",
+      label: <Link to="/recharge">Nạp tiền</Link>,
+    },
+    {
+      key: "download-document",
+      label: <Link to="/download-document">Tải tài liệu</Link>,
     },
   ];
 
   return (
-    <Sider trigger={null} style={siderStyle}>
-      <div className="demo-logo-vertical" />
+    <Header style={headerStyle}>
+      <div className="demo-logo" />
       <Menu
-        mode="inline"
+        mode="horizontal"
         defaultSelectedKeys={["dashboard"]}
         items={menuItems}
+        className="flex-1 w-fit"
       />
-    </Sider>
+    </Header>
   );
 };
 
