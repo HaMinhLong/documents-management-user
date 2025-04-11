@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  react-app:
+    build: .
+    ports:
+      - "3000:3000" # Map cổng 3000 bên ngoài vào cổng 80 bên trong container
+    volumes:
+      - .:/app # command for developer
+    restart: always
