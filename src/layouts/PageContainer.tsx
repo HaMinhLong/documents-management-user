@@ -68,7 +68,7 @@ const PageContainer = ({ children }: PropsType) => {
         <SiderPage />
 
         {user && (
-          <div className="flex flex-end p-[10px] z-[1001] cursor-pointer">
+          <div className="flex flex-end p-[10px] z-[1001] cursor-pointer w-[200px]">
             <Dropdown menu={{ items }} placement="bottom">
               <Space>
                 <Avatar
@@ -76,7 +76,7 @@ const PageContainer = ({ children }: PropsType) => {
                   icon={!user?.avatar && <UserOutlined />}
                 />
                 <span style={{ cursor: "pointer" }}>
-                  {user?.username || ""}
+                  {user?.full_name || ""}
                 </span>
               </Space>
             </Dropdown>

@@ -14,6 +14,7 @@ import DocumentPage from "./pages/DocumentPage";
 import { useGetMeQuery } from "./api/auth";
 import { useDispatch } from "react-redux";
 import UniversityPage from "./pages/UniversityPage/index";
+import SubjectPage from "./pages/SubjectPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -50,6 +51,11 @@ const App = () => {
             {/* Document Routes */}
             <Route element={<PrivateRoute />}>
               <Route path="/document" element={<DocumentPage />} />
+            </Route>
+
+            {/* University Page Routes */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/subject" element={<SubjectPage />} />
             </Route>
 
             {/* University Page Routes */}
