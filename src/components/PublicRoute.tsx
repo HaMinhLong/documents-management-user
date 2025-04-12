@@ -5,7 +5,7 @@ import { useAuth } from "./AuthProvider";
 const PublicRoute: React.FC = () => {
   const auth = useAuth();
 
-  return auth?.isAuthenticated ? <Navigate to="/" /> : <Outlet />;
+  return <Outlet />;
 };
 
 export default PublicRoute;

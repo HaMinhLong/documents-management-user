@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import PrivateRoute from "@/components/PrivateRoute";
 import { AuthProvider } from "@/components/AuthProvider";
 import { MessageProvider } from "@/context/MessageContext";
 import PublicRoute from "@/components/PublicRoute";
@@ -15,6 +14,9 @@ import { useGetMeQuery } from "./api/auth";
 import { useDispatch } from "react-redux";
 import UniversityPage from "./pages/UniversityPage/index";
 import SubjectPage from "./pages/SubjectPage";
+import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -38,28 +40,41 @@ const App = () => {
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<LoginPage />} />
             </Route>
+
+            <Route element={<PublicRoute />}>
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
+
+            <Route element={<PublicRoute />}>
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            </Route>
+
+            <Route element={<PublicRoute />}>
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+            </Route>
+
             {/* Private Routes */}
-            <Route element={<PrivateRoute />}>
-              <Route path="/" element={<HomePage />} />
+            <Route element={<PublicRoute />}>
+              <Route path="/" element={<DocumentPage />} />
             </Route>
 
             {/* Profile Routes */}
-            <Route element={<PrivateRoute />}>
+            <Route element={<PublicRoute />}>
               <Route path="/user/profile" element={<Profile />} />
             </Route>
 
             {/* Document Routes */}
-            <Route element={<PrivateRoute />}>
+            <Route element={<PublicRoute />}>
               <Route path="/document" element={<DocumentPage />} />
             </Route>
 
             {/* University Page Routes */}
-            <Route element={<PrivateRoute />}>
+            <Route element={<PublicRoute />}>
               <Route path="/subject" element={<SubjectPage />} />
             </Route>
 
             {/* University Page Routes */}
-            <Route element={<PrivateRoute />}>
+            <Route element={<PublicRoute />}>
               <Route path="/university" element={<UniversityPage />} />
             </Route>
 

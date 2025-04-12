@@ -52,14 +52,14 @@ const PageContainer = ({ children }: PropsType) => {
     <Content>
       <div className="h-[80px] pr-8 pl-2 flex items-center justify-between bg-[#fff]">
         <Link to="/">
-          <img width="180" height="80" className="logo" src={logoPage} alt="" />
+          <img width="250" height="80" className="logo" src={logoPage} alt="" />
         </Link>
 
-        <div className="flex-1 mx-4">
+        <div className="w-[300px] mx-4">
           <Search
             placeholder="Tìm kiếm tài liệu, môn học..."
             onSearch={(value) => console.log(value)}
-            style={{ width: 300 }}
+            style={{ width: 250 }}
             enterButton
             className="[&_input]:h-8"
           />
@@ -68,16 +68,19 @@ const PageContainer = ({ children }: PropsType) => {
         <SiderPage />
 
         {user && (
-          <div className="flex flex-end p-[10px] z-[1001] cursor-pointer w-[200px]">
+          <div className="flex flex-end p-[10px] z-[1001] cursor-pointer min-w-[200px]">
             <Dropdown menu={{ items }} placement="bottom">
               <Space>
                 <Avatar
                   src={handleGetFile(user?.avatar || "")}
                   icon={!user?.avatar && <UserOutlined />}
                 />
-                <span style={{ cursor: "pointer" }}>
+                <div
+                  className="max-w-[100px] truncate"
+                  style={{ cursor: "pointer" }}
+                >
                   {user?.full_name || ""}
-                </span>
+                </div>
               </Space>
             </Dropdown>
           </div>

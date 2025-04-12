@@ -5,7 +5,7 @@ import { useAuth } from "./AuthProvider";
 const PrivateRoute: React.FC = () => {
   const auth = useAuth();
 
-  return <Outlet />;
+  return auth?.isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
