@@ -23,8 +23,8 @@ const HeaderPage = () => {
       label: <Link to="/document">Tài liệu</Link>,
     },
     {
-      key: "school",
-      label: <Link to="/school">Trường học</Link>,
+      key: "university",
+      label: <Link to="/university">Trường học</Link>,
     },
     {
       key: "subject",

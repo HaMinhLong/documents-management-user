@@ -11,9 +11,9 @@ import Profile from "@/pages/AccountSetting/Profile";
 
 import LoginPage from "@/pages/LoginPage";
 import DocumentPage from "./pages/DocumentPage";
-import DocumentDetail from "./pages/DocumentPage/DocumentDetail";
 import { useGetMeQuery } from "./api/auth";
 import { useDispatch } from "react-redux";
+import UniversityPage from "./pages/UniversityPage/index";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -52,9 +52,9 @@ const App = () => {
               <Route path="/document" element={<DocumentPage />} />
             </Route>
 
-            {/* Document Routes */}
+            {/* University Page Routes */}
             <Route element={<PrivateRoute />}>
-              <Route path="/document/:id" element={<DocumentDetail />} />
+              <Route path="/university" element={<UniversityPage />} />
             </Route>
 
             {/* Catch-all route */}

@@ -101,9 +101,12 @@ export type GetListDocumentApiResponse = {
 };
 export type GetListDocumentApiArg = {
   keyword?: string;
-  status?: number;
   page?: number;
   limit?: number;
+  subject_id?: number;
+  category_id?: number;
+  university_id?: number;
+  status?: string;
 };
 
 export type TypeDocument = {
