@@ -6,6 +6,7 @@ import FacebookLogin, {
   ReactFacebookFailureResponse,
   ReactFacebookLoginInfo,
 } from "react-facebook-login";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 import { usePostLoginMutation } from "../../api/auth";
@@ -50,13 +51,12 @@ const LoginPage = () => {
   const handleFacebookLogin = async (
     response: ReactFacebookLoginInfo | ReactFacebookFailureResponse | any
   ) => {
-    console.log("response", response);
     if ("accessToken" in response && response.accessToken) {
       const accessToken: string = response.accessToken;
       try {
         // Gọi API backend để xử lý token từ Facebook
         const res: FacebookLoginResponse = await axios.post(
-          "http://localhost:8000/api/v1/auth/facebook",
+          `${process.env.REACT_APP_BASE_API_URL}/auth/facebook`,
           {
             access_token: accessToken,
           }
@@ -80,7 +80,7 @@ const LoginPage = () => {
     try {
       // Gọi API backend để xử lý token từ Facebook
       const res: FacebookLoginResponse = await axios.post(
-        "http://localhost:8000/api/v1/auth/facebook",
+        `${process.env.REACT_APP_BASE_API_URL}/auth/facebook`,
         {
           access_token: accessToken,
         }
@@ -97,6 +97,40 @@ const LoginPage = () => {
       messageApi.error("Đăng nhập với Facebook thất bại");
     }
   };
+
+  const handleGoogleLogin = async (credentialResponse: any) => {
+    console.log("credentialResponse", credentialResponse);
+    const accessToken = credentialResponse.access_token;
+    if (!accessToken) {
+      messageApi.error("Đăng nhập với Google thất bại");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_API_URL}/auth/google`,
+        {
+          access_token: accessToken,
+        }
+      );
+
+      const { token } = res.data.data;
+      localStorage.setItem("accessToken", token);
+      dispatch({
+        type: "auth/updateAccessToken",
+        payload: token,
+      });
+      window.location.href = "/";
+    } catch (error) {
+      messageApi.error("Đăng nhập với Google thất bại");
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleLogin,
+    onError: () => messageApi.error("Đăng nhập với Google thất bại"),
+    scope: "email profile openid",
+  });
 
   return (
     <Row
@@ -120,7 +154,7 @@ const LoginPage = () => {
                 color: "#000",
                 fontWeight: 500,
               }}
-              onClick={() => alert("Đăng nhập với Google - Chưa triển khai")}
+              onClick={() => googleLogin()}
             >
               Google
             </Button>
