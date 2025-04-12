@@ -17,6 +17,12 @@ const injectedRtkApi = apiWrapper.injectEndpoints({
       }),
       providesTags: ["document"],
     }),
+    getRelatedDocuments: build.query({
+      query: (params) => ({
+        url: "/documents/related",
+        params,
+      }),
+    }),
     getDetailDocument: build.query<
       GetDetailDocumentApiResponse | ErrorResponse,
       GetDetailDocumentApiArg
@@ -130,6 +136,15 @@ export type TypeDocument = {
   university?: TypeUniversity;
   user?: TypeUser;
   documentCategories: DocumentCategoryType[];
+  fileImages?: FileImages[];
+};
+
+export type FileImages = {
+  id?: number;
+  name?: string;
+  image_path?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export type DocumentCategoryType = {
@@ -150,6 +165,8 @@ export { injectedRtkApi as DocumentApi };
 export const {
   useGetListDocumentQuery,
   useLazyGetListDocumentQuery,
+  useGetRelatedDocumentsQuery,
+  useLazyGetRelatedDocumentsQuery,
   useGetDetailDocumentQuery,
   useLazyGetDetailDocumentQuery,
   usePostDocumentMutation,

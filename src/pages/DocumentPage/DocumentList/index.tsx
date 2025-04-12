@@ -11,6 +11,7 @@ import {
   Image,
   Empty,
 } from "antd";
+import { useNavigate } from "react-router-dom";
 import {
   GetListDocumentApiResponse,
   TypeCategory,
@@ -40,8 +41,8 @@ interface Filters {
   category_id: number | null;
   university_id: number | null;
 }
-
 const DocumentList = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<Filters>({
     subject_id: null,
     category_id: null,
@@ -139,13 +140,20 @@ const DocumentList = () => {
             {documentList?.data?.data?.map((doc) => (
               <Col xs={24} sm={12} md={8} lg={6} key={doc.id}>
                 <Card
+                  onClick={() => navigate(`/document/${doc.id}`)}
                   hoverable
                   className="border border-gray-200 rounded-lg"
                   cover={
                     <Image
                       className="w-full !h-[200px] object-cover"
-                      preview={false}
-                      src={handleGetFile(doc.instruct_path || "")}
+                      preview={true}
+                      src={
+                        doc?.fileImages?.[0]?.image_path
+                          ? handleGetFile(
+                              doc?.fileImages?.[0]?.image_path || ""
+                            )
+                          : "https://www.testo.com/images/not-available.jpg"
+                      }
                       alt=""
                     />
                   }
@@ -170,7 +178,9 @@ const DocumentList = () => {
                       ))}
                     </div>
                     <span className="text-teal-500 font-semibold">
-                      {Number(doc.price).toLocaleString("vi-VN")} VND
+                      {doc?.price === 0
+                        ? "Miễn phí"
+                        : `${Number(doc?.price).toLocaleString("vi-VN")} VNĐ`}
                     </span>
                   </div>
                 </Card>

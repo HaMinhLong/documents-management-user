@@ -17,6 +17,7 @@ import SubjectPage from "./pages/SubjectPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import DocumentDetailPage from "./pages/DocumentPage/DocumentDetail";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -61,6 +62,10 @@ const App = () => {
             {/* Profile Routes */}
             <Route element={<PublicRoute />}>
               <Route path="/user/profile" element={<Profile />} />
+            </Route>
+
+            <Route element={<PublicRoute />}>
+              <Route path="/document/:id" element={<DocumentDetailPage />} />
             </Route>
 
             {/* Document Routes */}

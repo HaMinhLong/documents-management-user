@@ -199,7 +199,7 @@ const LoginPage = () => {
               name="email"
               rules={[{ required: true, message: "Vui lòng nhập email!" }]}
             >
-              <Input size="large" placeholder="Value" />
+              <Input size="large" placeholder="admin@gmail.com" />
             </Form.Item>
 
             <Form.Item
@@ -207,7 +207,7 @@ const LoginPage = () => {
               name="password"
               rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
             >
-              <Input.Password size="large" placeholder="Value" />
+              <Input.Password size="large" placeholder="*******" />
             </Form.Item>
 
             <Form.Item>
