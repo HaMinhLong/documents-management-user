@@ -135,7 +135,7 @@ const DetailPage = () => {
                         `${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`
                       )}&embedded=true`}
                       width="100%"
-                      height="600px"
+                      height="1000px"
                       frameBorder="0"
                       title="Document Preview"
                     />

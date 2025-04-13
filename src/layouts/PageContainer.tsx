@@ -1,6 +1,14 @@
 import React from "react";
-import { Avatar, Dropdown, Input, Layout, MenuProps, Space } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  Input,
+  Layout,
+  MenuProps,
+  Space,
+} from "antd";
+import { Link } from "react-router-dom";
 
 import {
   LogoutOutlined,
@@ -23,7 +31,6 @@ interface PropsType {
 }
 
 const PageContainer = ({ children }: PropsType) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -67,7 +74,7 @@ const PageContainer = ({ children }: PropsType) => {
 
         <SiderPage />
 
-        {user && (
+        {user ? (
           <div className="flex flex-end p-[10px] z-[1001] cursor-pointer min-w-[200px]">
             <Dropdown menu={{ items }} placement="bottom">
               <Space>
@@ -84,6 +91,10 @@ const PageContainer = ({ children }: PropsType) => {
               </Space>
             </Dropdown>
           </div>
+        ) : (
+          <Button type="link" href="/login">
+            Đăng nhập
+          </Button>
         )}
       </div>
 

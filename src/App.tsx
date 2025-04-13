@@ -18,6 +18,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import DocumentDetailPage from "./pages/DocumentPage/DocumentDetail";
+import UploadDocumentPage from "./pages/UploadDocument";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -68,6 +69,9 @@ const App = () => {
               <Route path="/document/:id" element={<DocumentDetailPage />} />
             </Route>
 
+            <Route element={<PublicRoute />}>
+              <Route path="/upload-document" element={<UploadDocumentPage />} />
+            </Route>
             {/* Document Routes */}
             <Route element={<PublicRoute />}>
               <Route path="/document" element={<DocumentPage />} />

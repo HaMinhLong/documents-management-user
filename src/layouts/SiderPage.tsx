@@ -39,8 +39,8 @@ const HeaderPage = () => {
       label: <Link to="/recharge">Nạp tiền</Link>,
     },
     {
-      key: "download-document",
-      label: <Link to="/download-document">Tải tài liệu</Link>,
+      key: "upload-document",
+      label: <Link to="/upload-document">Tải tài liệu</Link>,
     },
   ];
 
