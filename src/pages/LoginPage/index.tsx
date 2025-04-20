@@ -234,7 +234,7 @@ const LoginPage = () => {
               <Divider style={{ margin: "12px 0" }} />
               <Text>
                 Bạn chưa có tài khoản?{" "}
-                <Link to="/register" style={{ color: "#1890ff" }}>
+                <Link to="/register" style={{ color: "#860204" }}>
                   Đăng kí
                 </Link>
               </Text>

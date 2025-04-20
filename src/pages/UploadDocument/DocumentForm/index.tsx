@@ -200,7 +200,7 @@ const DocumentForm = () => {
               type="primary"
               htmlType="submit"
               block
-              style={{ background: "#1890ff", borderColor: "#1890ff" }}
+              style={{ background: "#860204", borderColor: "#860204" }}
             >
               Đăng tài
             </Button>

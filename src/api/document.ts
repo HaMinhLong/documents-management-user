@@ -7,12 +7,28 @@ import { TypeUniversity } from "./university";
 
 const injectedRtkApi = apiWrapper.injectEndpoints({
   endpoints: (build) => ({
+    getDocumentPreview: build.query({
+      query: (queryArg) => ({
+        url: `/document/preview/${queryArg?.id}`,
+        params: queryArg,
+      }),
+    }),
     getListDocument: build.query<
       GetListDocumentApiResponse | ErrorResponse,
       GetListDocumentApiArg
     >({
       query: (queryArg) => ({
         url: "/document",
+        params: queryArg,
+      }),
+      providesTags: ["document"],
+    }),
+    getTopViewDocument: build.query<
+      GetListDocumentApiResponse | ErrorResponse,
+      GetListDocumentApiArg
+    >({
+      query: (queryArg) => ({
+        url: "/document/top-viewed",
         params: queryArg,
       }),
       providesTags: ["document"],
@@ -163,6 +179,10 @@ export type TypeCategory = {
 
 export { injectedRtkApi as DocumentApi };
 export const {
+  useGetDocumentPreviewQuery,
+  useLazyGetDocumentPreviewQuery,
+  useGetTopViewDocumentQuery,
+  useLazyGetTopViewDocumentQuery,
   useGetListDocumentQuery,
   useLazyGetListDocumentQuery,
   useGetRelatedDocumentsQuery,

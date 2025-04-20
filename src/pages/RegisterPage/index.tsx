@@ -131,7 +131,7 @@ const RegisterPage = () => {
             <div style={{ textAlign: "center" }}>
               <Text>
                 Bạn đã có tài khoản?{" "}
-                <Link to="/login" style={{ color: "#1890ff" }}>
+                <Link to="/login" style={{ color: "#860204" }}>
                   Đăng nhập
                 </Link>
               </Text>

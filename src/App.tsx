@@ -5,7 +5,6 @@ import { AuthProvider } from "@/components/AuthProvider";
 import { MessageProvider } from "@/context/MessageContext";
 import PublicRoute from "@/components/PublicRoute";
 
-import HomePage from "@/pages/HomePage";
 import Profile from "@/pages/AccountSetting/Profile";
 
 import LoginPage from "@/pages/LoginPage";
@@ -19,6 +18,10 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import DocumentDetailPage from "./pages/DocumentPage/DocumentDetail";
 import UploadDocumentPage from "./pages/UploadDocument";
+import VnPayPage from "./pages/VnPayPage";
+
+import { ConfigProvider } from "antd";
+import { themeConfig } from "./theme/themeConfig";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -35,63 +38,75 @@ const App = () => {
 
   return (
     <AuthProvider>
-      <MessageProvider>
-        <Router>
-          <Routes>
-            {/* Login Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/login" element={<LoginPage />} />
-            </Route>
+      <ConfigProvider theme={themeConfig}>
+        <MessageProvider>
+          <Router>
+            <Routes>
+              {/* Login Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/login" element={<LoginPage />} />
+              </Route>
 
-            <Route element={<PublicRoute />}>
-              <Route path="/register" element={<RegisterPage />} />
-            </Route>
+              <Route element={<PublicRoute />}>
+                <Route path="/register" element={<RegisterPage />} />
+              </Route>
 
-            <Route element={<PublicRoute />}>
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            </Route>
+              <Route element={<PublicRoute />}>
+                <Route
+                  path="/forgot-password"
+                  element={<ForgotPasswordPage />}
+                />
+              </Route>
 
-            <Route element={<PublicRoute />}>
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-            </Route>
+              <Route element={<PublicRoute />}>
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+              </Route>
 
-            {/* Private Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/" element={<DocumentPage />} />
-            </Route>
+              {/* Private Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/" element={<DocumentPage />} />
+              </Route>
 
-            {/* Profile Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/user/profile" element={<Profile />} />
-            </Route>
+              {/* Profile Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/user/profile" element={<Profile />} />
+              </Route>
 
-            <Route element={<PublicRoute />}>
-              <Route path="/document/:id" element={<DocumentDetailPage />} />
-            </Route>
+              <Route element={<PublicRoute />}>
+                <Route path="/document/:id" element={<DocumentDetailPage />} />
+              </Route>
 
-            <Route element={<PublicRoute />}>
-              <Route path="/upload-document" element={<UploadDocumentPage />} />
-            </Route>
-            {/* Document Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/document" element={<DocumentPage />} />
-            </Route>
+              <Route element={<PublicRoute />}>
+                <Route
+                  path="/upload-document"
+                  element={<UploadDocumentPage />}
+                />
+              </Route>
+              {/* Document Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/document" element={<DocumentPage />} />
+              </Route>
 
-            {/* University Page Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/subject" element={<SubjectPage />} />
-            </Route>
+              {/* University Page Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/subject" element={<SubjectPage />} />
+              </Route>
 
-            {/* University Page Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/university" element={<UniversityPage />} />
-            </Route>
+              {/* University Page Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/university" element={<UniversityPage />} />
+              </Route>
 
-            {/* Catch-all route */}
-            <Route path="*" element={<div>404 Not Found</div>} />
-          </Routes>
-        </Router>{" "}
-      </MessageProvider>
+              <Route element={<PublicRoute />}>
+                <Route path="/vnpay" element={<VnPayPage />} />
+              </Route>
+
+              {/* Catch-all route */}
+              <Route path="*" element={<div>404 Not Found</div>} />
+            </Routes>
+          </Router>{" "}
+        </MessageProvider>
+      </ConfigProvider>
     </AuthProvider>
   );
 };

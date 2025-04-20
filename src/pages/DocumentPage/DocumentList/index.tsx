@@ -1,30 +1,10 @@
-import React, { useState } from "react";
-import {
-  Layout,
-  Menu,
-  Row,
-  Col,
-  Card,
-  Space,
-  Tag,
-  Spin,
-  Image,
-  Empty,
-} from "antd";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Layout, Row, Col, Spin } from "antd";
 import {
   GetListDocumentApiResponse,
-  TypeCategory,
   useGetListDocumentQuery,
+  useGetTopViewDocumentQuery,
 } from "@/api/document";
-import {
-  GetListSubjectApiResponse,
-  TypeSubject,
-  useGetListSubjectQuery,
-} from "@/api/subject";
-import { DownloadOutlined, EyeFilled } from "@ant-design/icons";
-import { handleGetFile } from "@/utils";
-import Sider from "antd/es/layout/Sider";
 import {
   GetListUniversityApiResponse,
   useGetListUniversityQuery,
@@ -34,162 +14,83 @@ import {
   useGetListCategoryQuery,
 } from "@/api/category";
 
+import List from "./List";
+import { useNavigate } from "react-router-dom";
+import DocumentRelatedWrapper from "../DocumentDetail/DocumentRelatedWrapper";
+
 const { Content } = Layout;
 
-interface Filters {
-  subject_id: number | null;
-  category_id: number | null;
-  university_id: number | null;
-}
 const DocumentList = () => {
   const navigate = useNavigate();
-  const [filters, setFilters] = useState<Filters>({
-    subject_id: null,
-    category_id: null,
-    university_id: null,
-  });
-
   const { data, isLoading } = useGetListDocumentQuery({
-    subject_id: filters?.subject_id || undefined,
-    category_id: filters?.category_id || undefined,
-    university_id: filters?.university_id || undefined,
     status: "active",
   });
 
-  const { data: subjectsData, isLoading: isLoadingSubjects } =
-    useGetListSubjectQuery({});
+  const { data: dataTopView } = useGetTopViewDocumentQuery({});
 
-  const { data: universityData } = useGetListUniversityQuery({});
+  const { data: categoryData } = useGetListCategoryQuery({
+    status: "active",
+  });
 
-  const { data: categoryData } = useGetListCategoryQuery({});
+  const { data: universityData } = useGetListUniversityQuery({
+    status: "active",
+  });
+
+  const categories = categoryData as GetListCategoryApiResponse;
+  const universities = universityData as GetListUniversityApiResponse;
 
   const documentList = data as GetListDocumentApiResponse;
-  const subjects = subjectsData as GetListSubjectApiResponse;
-  const universities = universityData as GetListUniversityApiResponse;
-  const categories = categoryData as GetListCategoryApiResponse;
-
-  const handleFilter = (type: keyof Filters, id: number): void => {
-    setFilters((prev: Filters) => ({
-      ...prev,
-      [type]: prev[type] === id ? null : id,
-    }));
-  };
+  const documentTopView = dataTopView as GetListDocumentApiResponse;
 
   return (
-    <Layout>
-      <Sider width={250} className="bg-white p-4">
-        <h3 className="text-lg font-semibold mb-4">Lọc tài liệu</h3>
-        <Spin spinning={isLoadingSubjects}>
-          <div className="mb-6">
-            <h4 className="text-base font-medium mb-2">Trường học</h4>
-            <Menu
-              mode="inline"
-              selectedKeys={
-                filters.university_id ? [String(filters.university_id)] : []
-              }
-              onClick={({ key }) =>
-                handleFilter("university_id", parseInt(key))
-              }
-            >
-              {universities?.data?.data?.map((subject: TypeSubject) => (
-                <Menu.Item key={subject.id}>{subject.name}</Menu.Item>
-              ))}
-            </Menu>
-          </div>
-
-          <div className="mb-6">
-            <h4 className="text-base font-medium mb-2">Môn học</h4>
-            <Menu
-              mode="inline"
-              selectedKeys={
-                filters.subject_id ? [String(filters.subject_id)] : []
-              }
-              onClick={({ key }) => handleFilter("subject_id", parseInt(key))}
-            >
-              {subjects?.data?.data?.map((subject: TypeSubject) => (
-                <Menu.Item key={subject.id}>{subject.name}</Menu.Item>
-              ))}
-            </Menu>
-          </div>
-
-          <div>
-            <h4 className="text-base font-medium mb-2">Chuyên ngành</h4>
-            <Menu
-              mode="inline"
-              selectedKeys={
-                filters.category_id ? [String(filters.category_id)] : []
-              }
-              onClick={({ key }) => handleFilter("category_id", parseInt(key))}
-            >
-              {categories?.data?.data?.map((category: TypeCategory) => (
-                <Menu.Item key={category.id}>{category.name}</Menu.Item>
-              ))}
-            </Menu>
-          </div>
-        </Spin>
-      </Sider>
-
-      <Content className="p-6 bg-gray-100 min-h-screen">
-        <Spin spinning={isLoading}>
-          <Row gutter={[16, 16]}>
-            {documentList?.data?.data?.length === 0 && (
-              <Col span={24}>
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              </Col>
-            )}
-            {documentList?.data?.data?.map((doc) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={doc.id}>
-                <Card
-                  onClick={() => navigate(`/document/${doc.id}`)}
-                  hoverable
-                  className="border border-gray-200 rounded-lg"
-                  cover={
-                    <Image
-                      className="w-full !h-[200px] object-cover"
-                      preview={true}
-                      src={
-                        doc?.fileImages?.[0]?.image_path
-                          ? handleGetFile(
-                              doc?.fileImages?.[0]?.image_path || ""
-                            )
-                          : "https://www.testo.com/images/not-available.jpg"
-                      }
-                      alt=""
-                    />
-                  }
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <Space>
-                      <DownloadOutlined />
-                      <span>{doc?.download_count || 0}</span>
-                    </Space>
-                    <Space>
-                      <EyeFilled />
-                      <span>{doc?.view_count || 0}</span>
-                    </Space>
+    <Content className="min-h-screen">
+      <Spin spinning={isLoading}>
+        <Row gutter={[40, 32]}>
+          <Col span={18}>
+            <Row gutter={[16, 16]} className="mb-6">
+              {categories?.data?.data?.map((category) => (
+                <Col span={4} key={category.id}>
+                  <div
+                    className="bg-[#8d5050] p-1 cursor-pointer rounded-lg text-center text-[#fff]"
+                    onClick={() => {
+                      navigate(`/search?category=${category.id}`);
+                    }}
+                  >
+                    #{category.name}
                   </div>
-                  <h3 className="text-base font-medium">{doc.title}</h3>
-                  <div className="flex justify-between mt-2 items-center">
-                    <div className="flex flex-wrap gap-1">
-                      {doc.documentCategories?.map((category) => (
-                        <Tag key={category?.category?.id} color="blue">
-                          #{category?.category?.name}
-                        </Tag>
-                      ))}
-                    </div>
-                    <span className="text-teal-500 font-semibold">
-                      {doc?.price === 0
-                        ? "Miễn phí"
-                        : `${Number(doc?.price).toLocaleString("vi-VN")} VNĐ`}
-                    </span>
-                  </div>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Spin>
-      </Content>
-    </Layout>
+                </Col>
+              ))}
+            </Row>
+
+            <List documentList={documentList} />
+          </Col>
+          <Col span={6}>
+            <div className="grid grid-cols-1 gap-y-5">
+              <div className="">
+                <h3 className="widget-title mb-5">
+                  <span>Tài liệu phổ biến</span>
+                </h3>
+                <DocumentRelatedWrapper
+                  relatedDocuments={documentTopView?.data?.data}
+                />
+              </div>
+
+              <div className="">
+                <h3 className="widget-title">
+                  <span>Danh sách trường học</span>
+                </h3>
+
+                <div className="grid grid-cols-1 gap-y-5">
+                  {universities?.data?.data?.map((university) => (
+                    <div key={university.id}>{university.name}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Spin>
+    </Content>
   );
 };
 

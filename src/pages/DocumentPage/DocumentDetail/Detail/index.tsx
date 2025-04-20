@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Typography, Spin, Image, List, Avatar, Tabs } from "antd";
+import { Form, Typography, Spin, Image, List, Tabs } from "antd";
 import { useParams, Link } from "react-router-dom";
 
 import {
@@ -7,8 +7,10 @@ import {
   GetListDocumentApiResponse,
   useGetRelatedDocumentsQuery,
   useLazyGetDetailDocumentQuery,
+  useGetDocumentPreviewQuery,
 } from "@/api/document";
 import { handleGetFile } from "@/utils";
+import DocumentRelatedWrapper from "../DocumentRelatedWrapper";
 
 const { TabPane } = Tabs;
 
@@ -29,6 +31,8 @@ const DetailPage = () => {
       },
       { skip: !(data && "data" in data && data.data?.subject_id) }
     );
+  const { data: previewData, isFetching: isFetchingPreview } =
+    useGetDocumentPreviewQuery({ id: Number(id) }, { skip: !id });
 
   useEffect(() => {
     if (id) {
@@ -39,6 +43,7 @@ const DetailPage = () => {
   const dataDetail = data as GetDetailDocumentApiResponse;
   const relatedDocuments =
     (relatedData as GetListDocumentApiResponse)?.data?.data || [];
+  const previewUrl = previewData?.data?.previewUrl;
 
   useEffect(() => {
     if (dataDetail) {
@@ -68,7 +73,7 @@ const DetailPage = () => {
                       )
                     : "https://www.testo.com/images/not-available.jpg"
                 }
-                className=" !w-full object-cover"
+                className="!w-full object-cover"
                 preview
               />
             </div>
@@ -121,25 +126,39 @@ const DetailPage = () => {
             <div className="mt-4">
               <Tabs activeKey={activeTab} onChange={setActiveTab}>
                 <TabPane tab="Mở tài liệu" key="document">
-                  {dataDetail?.data?.file_path &&
-                  /\.(jpe?g|png|gif|bmp|webp)$/i.test(
-                    dataDetail?.data?.file_path
-                  ) ? (
-                    <Image
-                      src={handleGetFile(dataDetail?.data?.file_path)}
-                      className="!max-h-[300px] !w-full object-cover"
-                    />
-                  ) : (
-                    <iframe
-                      src={`https://docs.google.com/gview?url=${encodeURIComponent(
-                        `${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`
-                      )}&embedded=true`}
-                      width="100%"
-                      height="1000px"
-                      frameBorder="0"
-                      title="Document Preview"
-                    />
-                  )}
+                  <Spin spinning={isFetchingPreview}>
+                    {previewUrl ? (
+                      <div className="relative">
+                        <iframe
+                          src={`https://docs.google.com/gview?url=${encodeURIComponent(
+                            previewUrl
+                          )}&embedded=true`}
+                          width="100%"
+                          height="1000px"
+                          frameBorder="0"
+                          title="Document Preview"
+                        />
+                        <div className="absolute inset-0 top-[500px] flex items-center justify-center bg-black bg-opacity-50">
+                          <Typography.Text className="text-white text-lg">
+                            Chỉ hiển thị 5 trang đầu. Vui lòng tải tài liệu để
+                            xem toàn bộ nội dung.
+                          </Typography.Text>
+                        </div>
+                      </div>
+                    ) : dataDetail?.data?.file_path &&
+                      /\.(jpe?g|png|gif|bmp|webp)$/i.test(
+                        dataDetail?.data?.file_path
+                      ) ? (
+                      <Image
+                        src={handleGetFile(dataDetail?.data?.file_path)}
+                        className="!max-h-[300px] !w-full object-cover"
+                      />
+                    ) : (
+                      <Typography.Text>
+                        Không thể hiển thị preview
+                      </Typography.Text>
+                    )}
+                  </Spin>
                 </TabPane>
                 <TabPane tab="Hình ảnh" key="images">
                   {dataDetail?.data?.fileImages?.length ? (
@@ -165,47 +184,11 @@ const DetailPage = () => {
           </div>
 
           <div className="bg-[#fff] p-5 w-1/5">
-            <Typography.Title level={4}>Tài liệu liên quan</Typography.Title>
+            <h3 className="widget-title mb-5">
+              <span>Tài liệu liên quan</span>
+            </h3>
             <Spin spinning={isFetchingRelated}>
-              {relatedDocuments.length > 0 ? (
-                <List
-                  grid={{ gutter: 16, xs: 24, sm: 24, md: 24, lg: 24 }}
-                  dataSource={relatedDocuments}
-                  renderItem={(doc) => (
-                    <List.Item>
-                      <Link to={`/document/${doc?.id}`}>
-                        <div className="border rounded-lg p-4 hover:shadow-md">
-                          <Image
-                            src={
-                              doc?.fileImages?.[0]?.image_path
-                                ? handleGetFile(
-                                    doc?.fileImages?.[0]?.image_path || ""
-                                  )
-                                : "https://www.testo.com/images/not-available.jpg"
-                            }
-                            className="!max-h-[150px] !w-full object-cover mb-2"
-                            preview={false}
-                          />
-
-                          <div className="font-semibold text-left">
-                            {doc?.title || ""}
-                          </div>
-                          <Typography.Text>
-                            Giá:{" "}
-                            {doc?.price === 0
-                              ? "Miễn phí"
-                              : `${Number(doc?.price).toLocaleString(
-                                  "vi-VN"
-                                )} VNĐ`}
-                          </Typography.Text>
-                        </div>
-                      </Link>
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                <Typography.Text>Không có tài liệu liên quan</Typography.Text>
-              )}
+              <DocumentRelatedWrapper relatedDocuments={relatedDocuments} />
             </Spin>
           </div>
         </div>

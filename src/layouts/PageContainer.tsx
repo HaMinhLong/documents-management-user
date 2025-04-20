@@ -8,7 +8,7 @@ import {
   MenuProps,
   Space,
 } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   LogoutOutlined,
@@ -32,6 +32,7 @@ interface PropsType {
 
 const PageContainer = ({ children }: PropsType) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
 
   const handleLogout = () => {
@@ -64,8 +65,10 @@ const PageContainer = ({ children }: PropsType) => {
 
         <div className="w-[300px] mx-4">
           <Search
-            placeholder="Tìm kiếm tài liệu, môn học..."
-            onSearch={(value) => console.log(value)}
+            placeholder="Tìm kiếm tài liệu..."
+            onSearch={(value) => {
+              navigate(`/search?title=${value}`);
+            }}
             style={{ width: 250 }}
             enterButton
             className="[&_input]:h-8"
