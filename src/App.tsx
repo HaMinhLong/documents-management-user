@@ -22,6 +22,8 @@ import VnPayPage from "./pages/VnPayPage";
 
 import { ConfigProvider } from "antd";
 import { themeConfig } from "./theme/themeConfig";
+import OrderPage from "./pages/OrderPage";
+import SearchDocumentPage from "./pages/SearchDocument";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -95,6 +97,14 @@ const App = () => {
               {/* University Page Routes */}
               <Route element={<PublicRoute />}>
                 <Route path="/university" element={<UniversityPage />} />
+              </Route>
+
+              <Route element={<PublicRoute />}>
+                <Route path="/order" element={<OrderPage />} />
+              </Route>
+
+              <Route element={<PublicRoute />}>
+                <Route path="/search" element={<SearchDocumentPage />} />
               </Route>
 
               <Route element={<PublicRoute />}>

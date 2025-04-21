@@ -86,6 +86,10 @@ const HeaderPage = () => {
         key: "upload-document",
         label: <Link to="/upload-document">Tải tài liệu</Link>,
       },
+      {
+        key: "order",
+        label: <Link to="/order">Đơn hàng</Link>,
+      },
     ];
 
     setMenuItems(updatedMenuItems);

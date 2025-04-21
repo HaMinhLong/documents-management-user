@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Form, Typography, Spin, Image, List, Tabs } from "antd";
+import {
+  Form,
+  Typography,
+  Spin,
+  Image,
+  List,
+  Tabs,
+  Button,
+  message,
+} from "antd";
 import { useParams, Link } from "react-router-dom";
 
 import {
@@ -57,6 +66,26 @@ const DetailPage = () => {
       });
     }
   }, [data]);
+
+  const handleAddToCart = () => {
+    if (!dataDetail?.data) {
+      message.error("Không thể thêm vào giỏ hàng!");
+      return;
+    }
+    const cartKey = "cart";
+    // Get current cart from localStorage
+    const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+    // Check if document already exists in cart
+    const exists = cart.some((item: any) => item.id === dataDetail.data.id);
+    if (exists) {
+      message.info("Tài liệu đã có trong giỏ hàng!");
+      return;
+    }
+    // Add document to cart and save
+    cart.push(dataDetail.data);
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    message.success("Đã thêm vào giỏ hàng!");
+  };
 
   return (
     <Spin spinning={isFetching || isFetchingRelated}>
@@ -120,6 +149,16 @@ const DetailPage = () => {
                   Link tải
                 </Link>
               )}
+            </div>
+
+            <div className="mt-4">
+              <Button
+                type="primary"
+                onClick={handleAddToCart}
+                disabled={!dataDetail?.data}
+              >
+                Thêm vào giỏ hàng
+              </Button>
             </div>
 
             {/* Tabs: Mở tài liệu và Hình ảnh */}

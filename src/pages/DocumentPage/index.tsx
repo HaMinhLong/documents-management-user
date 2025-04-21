@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { Layout, Typography } from "antd";
+import { Image, Layout, Typography } from "antd";
 import { InitialType, useUrlSearchParams } from "use-url-search-params";
 
 import PageContainer from "@/layouts/PageContainer";
@@ -24,6 +24,11 @@ const DocumentPage = () => {
       <PageContainer>
         <Layout className="bg-[#fff]" style={{ minHeight: "100vh" }}>
           <Content style={{ padding: "16px" }} className="container mx-auto">
+            <Image
+              src={"@/assets/image/banner.png"}
+              alt=""
+              className="w-full h-[200px]"
+            />
             <Typography.Title level={5} className="uppercase mb-4">
               Danh sách tài liệu
             </Typography.Title>
