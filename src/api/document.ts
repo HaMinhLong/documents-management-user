@@ -48,6 +48,17 @@ const injectedRtkApi = apiWrapper.injectEndpoints({
         params: queryArg,
       }),
     }),
+    payment: build.mutation<
+      PostDocumentApiResponse | ErrorResponse,
+      { document_ids: number[]; referral_code?: string }
+    >({
+      query: (data) => ({
+        url: "/document/payment",
+        body: data,
+        method: "POST",
+      }),
+      invalidatesTags: ["document"],
+    }),
     postDocument: build.mutation<
       PostDocumentApiResponse | ErrorResponse,
       FormData
@@ -189,6 +200,7 @@ export const {
   useLazyGetRelatedDocumentsQuery,
   useGetDetailDocumentQuery,
   useLazyGetDetailDocumentQuery,
+  usePaymentMutation,
   usePostDocumentMutation,
   usePutDocumentMutation,
   useDeleteDocumentMutation,

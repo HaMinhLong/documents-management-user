@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Table, Typography, Image, Layout, Button, message } from "antd";
+import {
+  Table,
+  Typography,
+  Image,
+  Layout,
+  Button,
+  Spin,
+  message,
+  Modal,
+  Input,
+} from "antd";
 import { handleGetFile } from "@/utils";
 import PageContainer from "@/layouts/PageContainer";
+import { usePaymentMutation } from "@/api/document";
 
 const { Content } = Layout;
 
 const OrderPage = () => {
+  const [handlePayment, { isLoading }] = usePaymentMutation();
+
   const [cart, setCart] = useState<any[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [referralCode, setReferralCode] = useState("");
 
   useEffect(() => {
     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -66,6 +81,32 @@ const OrderPage = () => {
     },
   ];
 
+  // Calculate total price (ignore free documents)
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + (item.price > 0 ? Number(item.price) : 0),
+    0
+  );
+
+  const handleOrder = () => {
+    const document_ids = cart.map((item) => item.id);
+    handlePayment({
+      document_ids,
+      referral_code: referralCode || undefined,
+    }).then((res: any) => {
+      if (res?.error) {
+        message.error(
+          res?.error?.data?.message || "Thanh toán không thành công!"
+        );
+      } else {
+        localStorage.removeItem("cart");
+        setCart([]);
+        setIsModalVisible(false);
+        setReferralCode("");
+        message.success("Thanh toán thành công!");
+      }
+    });
+  };
+
   return (
     <PageContainer>
       <Layout className="bg-[#fff]" style={{ minHeight: "100vh" }}>
@@ -73,28 +114,54 @@ const OrderPage = () => {
           <Typography.Title level={5} className="uppercase mb-4">
             Đơn hàng của bạn
           </Typography.Title>
+          <Spin spinning={isLoading}>
+            <Table
+              columns={columns}
+              dataSource={cart}
+              rowKey="id"
+              pagination={false}
+              locale={{ emptyText: "Không có tài liệu nào trong đơn hàng." }}
+            />
+          </Spin>
 
-          <Table
-            columns={columns}
-            dataSource={cart}
-            rowKey="id"
-            pagination={false}
-            locale={{ emptyText: "Không có tài liệu nào trong đơn hàng." }}
-          />
+          {/* Total Price */}
+          <div className="mt-4 flex justify-end">
+            <Typography.Text strong>
+              Tổng tiền:{" "}
+              {totalPrice === 0
+                ? "Miễn phí"
+                : `${Number(totalPrice).toLocaleString("vi-VN")} VNĐ`}
+            </Typography.Text>
+          </div>
 
+          {/* Checkout Button */}
           <div className="mt-6 flex justify-end">
             <Button
               type="primary"
               disabled={cart.length === 0}
-              onClick={() => {
-                localStorage.removeItem("cart");
-                setCart([]);
-                message.success("Thanh toán thành công!");
-              }}
+              onClick={() => setIsModalVisible(true)}
             >
               Thanh toán
             </Button>
           </div>
+
+          {/* Modal for referral code */}
+          <Modal
+            title="Nhập mã giới thiệu (nếu có)"
+            open={isModalVisible}
+            onOk={handleOrder}
+            onCancel={() => setIsModalVisible(false)}
+            okText="Xác nhận thanh toán"
+            cancelText="Hủy"
+            confirmLoading={isLoading}
+          >
+            <Input
+              placeholder="Nhập mã giới thiệu"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
+              maxLength={32}
+            />
+          </Modal>
         </Content>
       </Layout>
     </PageContainer>
