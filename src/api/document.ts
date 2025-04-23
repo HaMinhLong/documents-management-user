@@ -149,6 +149,7 @@ export type GetListDocumentApiArg = {
   subject_id?: number;
   category_id?: number;
   university_id?: number;
+  user_id?: number;
   status?: string;
 };
 

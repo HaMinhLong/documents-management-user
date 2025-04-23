@@ -155,8 +155,11 @@ const DocumentForm = () => {
               style={{ width: "100%" }}
               min={0}
               placeholder="Giá (VNĐ)"
+              parser={(value) =>
+                parseInt((value || "").replace(/[^\d]/g, ""), 10)
+              }
               formatter={(value) =>
-                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
             />
           </Form.Item>

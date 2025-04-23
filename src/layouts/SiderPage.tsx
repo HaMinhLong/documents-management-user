@@ -92,7 +92,7 @@ const HeaderPage = () => {
       },
       {
         key: "order",
-        label: <Link to="/order">Đơn hàng</Link>,
+        label: <Link to="/order">Giỏ hàng</Link>,
       },
     ];
 

@@ -42,7 +42,7 @@ export default function RechargeForm() {
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={{
-          amount: "10000",
+          amount: "",
           orderDescription: `Nạp tiền thời gian: ${now}`,
           language: "vn",
         }}

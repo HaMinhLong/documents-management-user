@@ -130,7 +130,7 @@ const OrderPage = () => {
       <Layout className="bg-[#fff]" style={{ minHeight: "100vh" }}>
         <Content style={{ padding: "16px" }} className="container mx-auto">
           <Typography.Title level={5} className="uppercase mb-4">
-            Đơn hàng của bạn
+            Giỏ hàng của bạn
           </Typography.Title>
           <Spin spinning={isLoading}>
             <Table

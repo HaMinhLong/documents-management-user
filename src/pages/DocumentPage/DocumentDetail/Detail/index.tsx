@@ -167,15 +167,17 @@ const DetailPage = () => {
               )}
             </div>
 
-            <div className="mt-4">
-              <Button
-                type="primary"
-                onClick={handleAddToCart}
-                disabled={!dataDetail?.data}
-              >
-                Thêm vào giỏ hàng
-              </Button>
-            </div>
+            {!isViewDocumentFile && (
+              <div className="mt-4">
+                <Button
+                  type="primary"
+                  onClick={handleAddToCart}
+                  disabled={!dataDetail?.data}
+                >
+                  Thêm vào giỏ hàng
+                </Button>
+              </div>
+            )}
 
             {/* Tabs: Mở tài liệu và Hình ảnh */}
             <div className="mt-4">

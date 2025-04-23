@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Layout, Typography, Modal, Button } from "antd";
+import { Layout, Typography, Modal, Button, Spin } from "antd";
 import { InitialType, useUrlSearchParams } from "use-url-search-params";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 import PageContainer from "@/layouts/PageContainer";
 import DocumentForm from "./DocumentForm";
+import {
+  GetListDocumentApiResponse,
+  useGetListDocumentQuery,
+} from "@/api/document";
+import List from "../DocumentPage/DocumentList/List";
 
 const { Content } = Layout;
 
@@ -21,8 +26,15 @@ export const UploadDocumentContext = createContext<DocumentContextType>({});
 const UploadDocumentPage = () => {
   const navigate = useNavigate();
 
+  const user = useSelector((state: RootState) => state.auth.user);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const { data: documents, isLoading } = useGetListDocumentQuery({
+    user_id: user?.id,
+    status: "active",
+  });
+  const documentList = documents as GetListDocumentApiResponse;
 
   useEffect(() => {
     if (!accessToken) {
@@ -49,7 +61,16 @@ const UploadDocumentPage = () => {
 
             <Layout>
               {accessToken ? (
-                <DocumentForm />
+                <Spin spinning={isLoading}>
+                  <DocumentForm />
+
+                  <div className="bg-white p-5">
+                    <Typography.Title level={5} className="uppercase mb-6">
+                      Tài liệu của tôi
+                    </Typography.Title>
+                    <List documentList={documentList} />
+                  </div>
+                </Spin>
               ) : (
                 <Modal
                   title="Yêu cầu đăng nhập"

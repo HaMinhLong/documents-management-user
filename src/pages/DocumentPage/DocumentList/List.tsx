@@ -69,15 +69,20 @@ const List = ({ documentList }: PropsType) => {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-end gap-x-2 w-full">
-                  <Space>
-                    <DownloadOutlined />
-                    <span>{doc?.download_count || 0}</span>
-                  </Space>
-                  <Space>
-                    👁
-                    <span>{doc?.view_count || 0}</span>
-                  </Space>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    Người đăng: {doc?.user?.full_name}
+                  </div>
+                  <div className="flex items-center justify-end gap-x-2 w-[100px]">
+                    <Space>
+                      <DownloadOutlined />
+                      <span>{doc?.download_count || 0}</span>
+                    </Space>
+                    <Space>
+                      👁
+                      <span>{doc?.view_count || 0}</span>
+                    </Space>
+                  </div>
                 </div>
               </div>
             </div>
