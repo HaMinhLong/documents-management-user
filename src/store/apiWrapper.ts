@@ -83,6 +83,7 @@ export const apiWrapper = createApi({
     "document",
     "transaction",
     "category",
+    "vnpay",
   ],
   endpoints: () => ({}),
 });

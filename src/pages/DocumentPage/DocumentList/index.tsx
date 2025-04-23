@@ -15,7 +15,7 @@ import {
 } from "@/api/category";
 
 import List from "./List";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DocumentRelatedWrapper from "../DocumentDetail/DocumentRelatedWrapper";
 
 const { Content } = Layout;
@@ -67,24 +67,29 @@ const DocumentList = () => {
           <Col span={6}>
             <div className="grid grid-cols-1 gap-y-5">
               <div className="">
-                <h3 className="widget-title mb-5">
-                  <span>Tài liệu phổ biến</span>
-                </h3>
-                <DocumentRelatedWrapper
-                  relatedDocuments={documentTopView?.data?.data}
-                />
-              </div>
-
-              <div className="">
                 <h3 className="widget-title">
                   <span>Danh sách trường học</span>
                 </h3>
 
                 <div className="grid grid-cols-1 gap-y-5">
                   {universities?.data?.data?.map((university) => (
-                    <div key={university.id}>{university.name}</div>
+                    <Link
+                      key={university?.id}
+                      to={`/search?university=${university.id}`}
+                    >
+                      {university.name}
+                    </Link>
                   ))}
                 </div>
+              </div>
+
+              <div className="">
+                <h3 className="widget-title mb-5">
+                  <span>Tài liệu phổ biến</span>
+                </h3>
+                <DocumentRelatedWrapper
+                  relatedDocuments={documentTopView?.data?.data}
+                />
               </div>
             </div>
           </Col>

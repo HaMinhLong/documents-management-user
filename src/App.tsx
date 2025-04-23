@@ -25,6 +25,7 @@ import { themeConfig } from "./theme/themeConfig";
 import OrderPage from "./pages/OrderPage";
 import SearchDocumentPage from "./pages/SearchDocument";
 import PurchasedDocumentPage from "./pages/PurchasedDocument";
+import RechargePage from "./pages/RechargePage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -88,6 +89,10 @@ const App = () => {
               {/* Document Routes */}
               <Route element={<PublicRoute />}>
                 <Route path="/document" element={<DocumentPage />} />
+              </Route>
+
+              <Route element={<PublicRoute />}>
+                <Route path="/recharge" element={<RechargePage />} />
               </Route>
 
               {/* University Page Routes */}
