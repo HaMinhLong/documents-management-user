@@ -34,6 +34,7 @@ const PageContainer = ({ children }: PropsType) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -77,7 +78,7 @@ const PageContainer = ({ children }: PropsType) => {
 
         <SiderPage />
 
-        {user ? (
+        {user && accessToken ? (
           <div className="flex flex-end p-[10px] z-[1001] cursor-pointer min-w-[200px]">
             <Dropdown menu={{ items }} placement="bottom">
               <Space>

@@ -21,14 +21,14 @@ export const PurchasedDocumentContext = createContext<DocumentContextType>({});
 const PurchasedDocumentPage = () => {
   const navigate = useNavigate();
 
-  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (!accessToken) {
       setIsModalVisible(true);
     }
-  }, [user]);
+  }, [accessToken]);
 
   const handleLoginRedirect = () => {
     setIsModalVisible(false);
@@ -48,7 +48,7 @@ const PurchasedDocumentPage = () => {
             </Typography.Title>
 
             <Layout>
-              {user ? (
+              {accessToken ? (
                 <ListPurchasedDocument />
               ) : (
                 <Modal

@@ -22,7 +22,7 @@ const { Content } = Layout;
 const OrderPage = () => {
   const navigate = useNavigate();
   const [handlePayment, { isLoading }] = usePaymentMutation();
-  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const [cart, setCart] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -46,7 +46,7 @@ const OrderPage = () => {
   };
 
   const handleCheckoutClick = () => {
-    if (!user) {
+    if (!accessToken) {
       setIsLoginModalVisible(true);
     } else {
       setIsModalVisible(true);

@@ -21,14 +21,14 @@ export const RechargeContext = createContext<RechargeContextType>({});
 const RechargePage = () => {
   const navigate = useNavigate();
 
-  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (!accessToken) {
       setIsModalVisible(true);
     }
-  }, [user]);
+  }, [accessToken]);
 
   const handleLoginRedirect = () => {
     setIsModalVisible(false);
@@ -44,7 +44,7 @@ const RechargePage = () => {
         <Layout style={{ minHeight: "100vh" }}>
           <Content style={{ padding: "16px" }}>
             <Layout>
-              {user ? (
+              {accessToken ? (
                 <RechargeForm />
               ) : (
                 <Modal

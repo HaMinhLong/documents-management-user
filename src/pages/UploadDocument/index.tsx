@@ -21,14 +21,14 @@ export const UploadDocumentContext = createContext<DocumentContextType>({});
 const UploadDocumentPage = () => {
   const navigate = useNavigate();
 
-  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (!accessToken) {
       setIsModalVisible(true);
     }
-  }, [user]);
+  }, [accessToken]);
 
   const handleLoginRedirect = () => {
     setIsModalVisible(false);
@@ -48,7 +48,7 @@ const UploadDocumentPage = () => {
             </Typography.Title>
 
             <Layout>
-              {user ? (
+              {accessToken ? (
                 <DocumentForm />
               ) : (
                 <Modal

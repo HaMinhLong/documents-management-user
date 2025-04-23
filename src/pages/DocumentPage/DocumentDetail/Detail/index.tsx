@@ -28,6 +28,7 @@ const DetailPage = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
   const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const [activeTab, setActiveTab] = useState("images");
 
@@ -55,11 +56,14 @@ const DetailPage = () => {
     (relatedData as GetListDocumentApiResponse)?.data?.data || [];
 
   const isViewDocumentFile = useMemo(() => {
-    if (user?.id === dataDetail?.data?.user_id) {
+    if (user?.id === dataDetail?.data?.user_id && accessToken) {
       return true;
     }
 
-    if (user?.id === dataDetail?.data?.orderItems?.[0]?.order?.user_id) {
+    if (
+      user?.id === dataDetail?.data?.orderItems?.[0]?.order?.user_id &&
+      accessToken
+    ) {
       return true;
     }
 
