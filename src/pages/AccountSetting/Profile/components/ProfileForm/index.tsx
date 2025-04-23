@@ -52,8 +52,6 @@ const ProfileForm = () => {
     return e?.fileList;
   };
 
-  console.log("levelValue", levelValue);
-
   const handleSubmit = (values: TypeUser) => {
     const dataSubmit = {
       full_name: values?.full_name || undefined,
