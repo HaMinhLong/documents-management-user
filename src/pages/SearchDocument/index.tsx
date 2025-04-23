@@ -36,6 +36,7 @@ const SearchDocumentPage = () => {
   const { data: dataTopView } = useGetTopViewDocumentQuery({});
 
   const documentList = data as GetListDocumentApiResponse;
+
   const documentTopView = dataTopView as GetListDocumentApiResponse;
 
   return (

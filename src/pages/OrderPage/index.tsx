@@ -13,14 +13,20 @@ import {
 import { handleGetFile } from "@/utils";
 import PageContainer from "@/layouts/PageContainer";
 import { usePaymentMutation } from "@/api/document";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const { Content } = Layout;
 
 const OrderPage = () => {
+  const navigate = useNavigate();
   const [handlePayment, { isLoading }] = usePaymentMutation();
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [cart, setCart] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [referralCode, setReferralCode] = useState("");
 
   useEffect(() => {
@@ -33,6 +39,18 @@ const OrderPage = () => {
     setCart(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
     message.success("Đã xóa khỏi đơn hàng!");
+  };
+
+  const handleLoginRedirect = () => {
+    navigate("/login");
+  };
+
+  const handleCheckoutClick = () => {
+    if (!user) {
+      setIsLoginModalVisible(true);
+    } else {
+      setIsModalVisible(true);
+    }
   };
 
   const columns = [
@@ -139,11 +157,33 @@ const OrderPage = () => {
             <Button
               type="primary"
               disabled={cart.length === 0}
-              onClick={() => setIsModalVisible(true)}
+              onClick={handleCheckoutClick}
             >
               Thanh toán
             </Button>
           </div>
+
+          {/* Login Required Modal */}
+          <Modal
+            title="Yêu cầu đăng nhập"
+            open={isLoginModalVisible}
+            onCancel={() => setIsLoginModalVisible(false)}
+            footer={[
+              <Button
+                key="cancel"
+                onClick={() => setIsLoginModalVisible(false)}
+              >
+                Hủy
+              </Button>,
+              <Button key="login" type="primary" onClick={handleLoginRedirect}>
+                Đăng nhập
+              </Button>,
+            ]}
+          >
+            <Typography.Text>
+              Bạn cần đăng nhập để thanh toán. Vui lòng đăng nhập tài khoản.
+            </Typography.Text>
+          </Modal>
 
           {/* Modal for referral code */}
           <Modal

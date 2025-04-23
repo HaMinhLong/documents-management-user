@@ -87,6 +87,10 @@ const HeaderPage = () => {
         label: <Link to="/upload-document">Tải tài liệu</Link>,
       },
       {
+        key: "purchased-document",
+        label: <Link to="/purchased-document">Tài liệu đã mua</Link>,
+      },
+      {
         key: "order",
         label: <Link to="/order">Đơn hàng</Link>,
       },

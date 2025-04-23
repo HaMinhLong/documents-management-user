@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Form,
   Typography,
@@ -10,13 +10,14 @@ import {
   message,
 } from "antd";
 import { useParams, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 import {
   GetDetailDocumentApiResponse,
   GetListDocumentApiResponse,
   useGetRelatedDocumentsQuery,
   useLazyGetDetailDocumentQuery,
-  useGetDocumentPreviewQuery,
 } from "@/api/document";
 import { handleGetFile } from "@/utils";
 import DocumentRelatedWrapper from "../DocumentRelatedWrapper";
@@ -26,7 +27,9 @@ const { TabPane } = Tabs;
 const DetailPage = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
-  const [activeTab, setActiveTab] = useState("document");
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const [activeTab, setActiveTab] = useState("images");
 
   const [getDetail, { data, isFetching }] = useLazyGetDetailDocumentQuery();
   const { data: relatedData, isFetching: isFetchingRelated } =
@@ -40,8 +43,6 @@ const DetailPage = () => {
       },
       { skip: !(data && "data" in data && data.data?.subject_id) }
     );
-  const { data: previewData, isFetching: isFetchingPreview } =
-    useGetDocumentPreviewQuery({ id: Number(id) }, { skip: !id });
 
   useEffect(() => {
     if (id) {
@@ -52,7 +53,18 @@ const DetailPage = () => {
   const dataDetail = data as GetDetailDocumentApiResponse;
   const relatedDocuments =
     (relatedData as GetListDocumentApiResponse)?.data?.data || [];
-  const previewUrl = previewData?.data?.previewUrl;
+
+  const isViewDocumentFile = useMemo(() => {
+    if (user?.id === dataDetail?.data?.user_id) {
+      return true;
+    }
+
+    if (user?.id === dataDetail?.data?.orderItems?.[0]?.order?.user_id) {
+      return true;
+    }
+
+    return false;
+  }, [user, dataDetail?.data?.id]);
 
   useEffect(() => {
     if (dataDetail) {
@@ -139,7 +151,7 @@ const DetailPage = () => {
                       "vi-VN"
                     )} VNĐ`}
               </Typography.Text>
-              {dataDetail?.data?.file_path && (
+              {dataDetail?.data?.file_path && isViewDocumentFile && (
                 <Link
                   to={`${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`}
                   target="_blank"
@@ -164,41 +176,29 @@ const DetailPage = () => {
             {/* Tabs: Mở tài liệu và Hình ảnh */}
             <div className="mt-4">
               <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                <TabPane tab="Mở tài liệu" key="document">
-                  <Spin spinning={isFetchingPreview}>
-                    {previewUrl ? (
-                      <div className="relative">
-                        <iframe
-                          src={`https://docs.google.com/gview?url=${encodeURIComponent(
-                            previewUrl
-                          )}&embedded=true`}
-                          width="100%"
-                          height="1000px"
-                          frameBorder="0"
-                          title="Document Preview"
-                        />
-                        <div className="absolute inset-0 top-[500px] flex items-center justify-center bg-black bg-opacity-50">
-                          <Typography.Text className="text-white text-lg">
-                            Chỉ hiển thị 5 trang đầu. Vui lòng tải tài liệu để
-                            xem toàn bộ nội dung.
-                          </Typography.Text>
-                        </div>
-                      </div>
-                    ) : dataDetail?.data?.file_path &&
-                      /\.(jpe?g|png|gif|bmp|webp)$/i.test(
-                        dataDetail?.data?.file_path
-                      ) ? (
+                {isViewDocumentFile && (
+                  <TabPane tab="Chi tiết tài liệu" key="document">
+                    {dataDetail?.data?.file_path &&
+                    /\.(jpe?g|png|gif|bmp|webp)$/i.test(
+                      dataDetail?.data?.file_path
+                    ) ? (
                       <Image
                         src={handleGetFile(dataDetail?.data?.file_path)}
                         className="!max-h-[300px] !w-full object-cover"
                       />
                     ) : (
-                      <Typography.Text>
-                        Không thể hiển thị preview
-                      </Typography.Text>
+                      <iframe
+                        src={`https://docs.google.com/gview?url=${encodeURIComponent(
+                          `${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`
+                        )}&embedded=true`}
+                        width="100%"
+                        height="1000px"
+                        frameBorder="0"
+                        title="Document Preview"
+                      />
                     )}
-                  </Spin>
-                </TabPane>
+                  </TabPane>
+                )}
                 <TabPane tab="Hình ảnh" key="images">
                   {dataDetail?.data?.fileImages?.length ? (
                     <List

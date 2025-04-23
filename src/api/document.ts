@@ -23,6 +23,16 @@ const injectedRtkApi = apiWrapper.injectEndpoints({
       }),
       providesTags: ["document"],
     }),
+    getPurchasedDocument: build.query<
+      GetListDocumentApiResponse | ErrorResponse,
+      GetListDocumentApiArg
+    >({
+      query: (queryArg) => ({
+        url: "/documents/purchased",
+        params: queryArg,
+      }),
+      providesTags: ["document"],
+    }),
     getTopViewDocument: build.query<
       GetListDocumentApiResponse | ErrorResponse,
       GetListDocumentApiArg
@@ -164,6 +174,25 @@ export type TypeDocument = {
   user?: TypeUser;
   documentCategories: DocumentCategoryType[];
   fileImages?: FileImages[];
+  orderItems?: OrderItem[];
+};
+
+export type OrderItem = {
+  id?: number;
+  document_id?: number;
+  order_id?: number;
+  order?: TypeOrder;
+};
+
+export type TypeOrder = {
+  id?: number;
+  user_id?: number;
+  total_amount?: number;
+  status?: UserStatusType;
+  created_at?: string;
+  updatedAt?: string;
+
+  user?: TypeUser;
 };
 
 export type FileImages = {
@@ -190,6 +219,8 @@ export type TypeCategory = {
 
 export { injectedRtkApi as DocumentApi };
 export const {
+  useGetPurchasedDocumentQuery,
+  useLazyGetPurchasedDocumentQuery,
   useGetDocumentPreviewQuery,
   useLazyGetDocumentPreviewQuery,
   useGetTopViewDocumentQuery,

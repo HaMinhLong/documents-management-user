@@ -24,6 +24,7 @@ import { ConfigProvider } from "antd";
 import { themeConfig } from "./theme/themeConfig";
 import OrderPage from "./pages/OrderPage";
 import SearchDocumentPage from "./pages/SearchDocument";
+import PurchasedDocumentPage from "./pages/PurchasedDocument";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -101,6 +102,13 @@ const App = () => {
 
               <Route element={<PublicRoute />}>
                 <Route path="/order" element={<OrderPage />} />
+              </Route>
+
+              <Route element={<PublicRoute />}>
+                <Route
+                  path="/purchased-document"
+                  element={<PurchasedDocumentPage />}
+                />
               </Route>
 
               <Route element={<PublicRoute />}>
