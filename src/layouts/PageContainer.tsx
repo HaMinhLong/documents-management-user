@@ -50,6 +50,22 @@ const PageContainer = ({ children }: PropsType) => {
       icon: <SettingOutlined />,
     },
     {
+      label: <Link to="/recharge">Nạp tiền</Link>,
+      key: "3",
+    },
+    {
+      label: <Link to="/upload-document">Tải tài liệu</Link>,
+      key: "4",
+    },
+    {
+      label: <Link to="/purchased-document">Tài liệu đã mua</Link>,
+      key: "5",
+    },
+    {
+      label: <Link to="/order">Giỏ hàng</Link>,
+      key: "6",
+    },
+    {
       label: "Đăng xuất",
       key: "2",
       icon: <LogoutOutlined />,

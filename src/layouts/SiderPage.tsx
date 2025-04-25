@@ -78,22 +78,22 @@ const HeaderPage = () => {
           key: category.id,
         })),
       },
-      {
-        key: "recharge",
-        label: <Link to="/recharge">Nạp tiền</Link>,
-      },
-      {
-        key: "upload-document",
-        label: <Link to="/upload-document">Tải tài liệu</Link>,
-      },
-      {
-        key: "purchased-document",
-        label: <Link to="/purchased-document">Tài liệu đã mua</Link>,
-      },
-      {
-        key: "order",
-        label: <Link to="/order">Giỏ hàng</Link>,
-      },
+      // {
+      //   key: "recharge",
+      //   label: <Link to="/recharge">Nạp tiền</Link>,
+      // },
+      // {
+      //   key: "upload-document",
+      //   label: <Link to="/upload-document">Tải tài liệu</Link>,
+      // },
+      // {
+      //   key: "purchased-document",
+      //   label: <Link to="/purchased-document">Tài liệu đã mua</Link>,
+      // },
+      // {
+      //   key: "order",
+      //   label: <Link to="/order">Giỏ hàng</Link>,
+      // },
     ];
 
     setMenuItems(updatedMenuItems);
