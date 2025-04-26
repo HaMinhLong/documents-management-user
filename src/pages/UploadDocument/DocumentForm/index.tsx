@@ -18,6 +18,7 @@ import { useGetListSubjectQuery } from "@/api/subject";
 import { useGetListUniversityQuery } from "@/api/university";
 import { GetListSubjectApiResponse } from "@/api/subject";
 import { GetListUniversityApiResponse } from "@/api/university";
+import { useGetListCategoryQuery } from "@/api/category";
 
 interface NormFileEvent {
   file: any;
@@ -29,8 +30,13 @@ const DocumentForm = () => {
   const messageApi = useMessage();
   const navigate = useNavigate();
 
-  const { data: subjects } = useGetListSubjectQuery({});
-  const { data: universities } = useGetListUniversityQuery({});
+  const { data: subjects } = useGetListSubjectQuery({ status: "active" });
+  const { data: universities } = useGetListUniversityQuery({
+    status: "active",
+  });
+  const { data: categories } = useGetListCategoryQuery({
+    status: "active",
+  });
   const [createDocument, { isLoading: isCreating }] = usePostDocumentMutation();
 
   const subjectOptions = (
@@ -47,11 +53,19 @@ const DocumentForm = () => {
     value: item?.id,
   }));
 
+  const categoryyOptions = (
+    categories as GetListUniversityApiResponse
+  )?.data?.data?.map((item) => ({
+    label: item?.name,
+    value: item?.id,
+  }));
+
   const handleSubmit = (values: {
     title: string;
     price: string;
     subject_id: number;
     university_id: number;
+    category_ids: number[];
     file: { originFileObj: string | Blob }[];
     fileImages: any[];
   }) => {
@@ -66,6 +80,10 @@ const DocumentForm = () => {
     formData.append(
       "university_id",
       values?.university_id ? String(values.university_id) : ""
+    );
+    formData.append(
+      "category_ids",
+      values?.category_ids ? String(values.category_ids) : ""
     );
 
     if (values?.file?.[0]?.originFileObj) {
@@ -147,6 +165,18 @@ const DocumentForm = () => {
           </Form.Item>
 
           <Form.Item
+            label="Chuyên mục"
+            name="category_ids"
+            rules={[{ required: true, message: "Vui lòng chọn chuyên mục!" }]}
+          >
+            <Select
+              placeholder="Chọn chuyên mục"
+              options={categoryyOptions}
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+
+          <Form.Item
             label="Giá bán"
             name="price"
             rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
@@ -155,8 +185,11 @@ const DocumentForm = () => {
               style={{ width: "100%" }}
               min={0}
               placeholder="Giá (VNĐ)"
+              parser={(value) =>
+                parseInt((value || "").replace(/[^\d]/g, ""), 10)
+              }
               formatter={(value) =>
-                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
             />
           </Form.Item>
@@ -200,7 +233,7 @@ const DocumentForm = () => {
               type="primary"
               htmlType="submit"
               block
-              style={{ background: "#1890ff", borderColor: "#1890ff" }}
+              style={{ background: "#860204", borderColor: "#860204" }}
             >
               Đăng tài
             </Button>

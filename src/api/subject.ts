@@ -98,7 +98,7 @@ export type GetListSubjectApiResponse = {
 };
 export type GetListSubjectApiArg = {
   keyword?: string;
-  status?: number;
+  status?: string;
   page?: number;
   limit?: number;
 };

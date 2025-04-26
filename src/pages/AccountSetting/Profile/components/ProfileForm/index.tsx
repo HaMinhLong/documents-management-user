@@ -8,6 +8,7 @@ import {
   Button,
   Input,
   InputNumber,
+  Tag,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,6 +25,7 @@ const ProfileForm = () => {
   const messageApi = useMessage();
 
   const user = useSelector((state: RootState) => state.auth.user);
+  const levelValue = Form.useWatch("level", form);
 
   const [updateUser, { isLoading: isUpdating }] = usePutUserMutation();
   const [updateAvatar] = usePatchUserMutation();
@@ -36,6 +38,7 @@ const ProfileForm = () => {
         email: user?.email || "",
         phone: user?.phone || "",
         balance: user?.balance || "",
+        level: user?.level || "Sliver",
         referral_code: user?.referral_code || "",
         status: user?.status || "pending",
       });
@@ -83,6 +86,22 @@ const ProfileForm = () => {
         }
       });
     });
+  };
+
+  const getRankTag = (level: string) => {
+    switch (level) {
+      case "Gold":
+        return <Tag color="#faad14">Gold</Tag>;
+
+      case "Platinum":
+        return <Tag color="#1890ff">Platinum</Tag>;
+
+      case "Diamond":
+        return <Tag color="#722ed1">Diamond</Tag>;
+
+      default:
+        return <Tag color="#bfbfbf">Silver</Tag>;
+    }
   };
 
   return (
@@ -148,12 +167,22 @@ const ProfileForm = () => {
               <Input.Password />
             </Form.Item>
 
+            <Form.Item name="level" label="Rank">
+              {getRankTag(levelValue)}
+            </Form.Item>
+
             <Form.Item name="balance" label="Số dư">
               <InputNumber
                 style={{ widows: "100%" }}
                 controls={false}
                 className="w-full"
                 disabled
+                parser={(value) =>
+                  parseInt((value || "").replace(/[^\d]/g, ""), 10)
+                }
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
               />
             </Form.Item>
 

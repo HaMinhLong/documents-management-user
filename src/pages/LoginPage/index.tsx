@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Row, Col, Typography, Divider } from "antd";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,7 +6,7 @@ import FacebookLogin, {
   ReactFacebookFailureResponse,
   ReactFacebookLoginInfo,
 } from "react-facebook-login";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 import { usePostLoginMutation } from "../../api/auth";
@@ -25,6 +25,13 @@ const LoginPage = () => {
     password: string;
   }
 
+  useEffect(() => {
+    localStorage.removeItem("accessToken");
+    dispatch({
+      type: "auth/logout",
+    });
+  }, []);
+
   const onFinish = (values: LoginFormValues) => {
     login(values).then((res: any) => {
       if (res?.error) {
@@ -32,7 +39,7 @@ const LoginPage = () => {
       } else {
         localStorage.setItem("accessToken", res?.data?.data?.token);
         dispatch({
-          type: "auth/updateAccessToken",
+          type: "auth/logout",
           payload: res?.data?.data?.token,
         });
         window.location.href = "/";
@@ -234,7 +241,7 @@ const LoginPage = () => {
               <Divider style={{ margin: "12px 0" }} />
               <Text>
                 Bạn chưa có tài khoản?{" "}
-                <Link to="/register" style={{ color: "#1890ff" }}>
+                <Link to="/register" style={{ color: "#860204" }}>
                   Đăng kí
                 </Link>
               </Text>

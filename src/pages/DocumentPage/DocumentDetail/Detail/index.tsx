@@ -1,6 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Form, Typography, Spin, Image, List, Avatar, Tabs } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Form,
+  Typography,
+  Spin,
+  Image,
+  List,
+  Tabs,
+  Button,
+  message,
+} from "antd";
 import { useParams, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 import {
   GetDetailDocumentApiResponse,
@@ -9,13 +20,17 @@ import {
   useLazyGetDetailDocumentQuery,
 } from "@/api/document";
 import { handleGetFile } from "@/utils";
+import DocumentRelatedWrapper from "../DocumentRelatedWrapper";
 
 const { TabPane } = Tabs;
 
 const DetailPage = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
-  const [activeTab, setActiveTab] = useState("document");
+  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+  const [activeTab, setActiveTab] = useState("images");
 
   const [getDetail, { data, isFetching }] = useLazyGetDetailDocumentQuery();
   const { data: relatedData, isFetching: isFetchingRelated } =
@@ -40,6 +55,21 @@ const DetailPage = () => {
   const relatedDocuments =
     (relatedData as GetListDocumentApiResponse)?.data?.data || [];
 
+  const isViewDocumentFile = useMemo(() => {
+    if (user?.id === dataDetail?.data?.user_id && accessToken) {
+      return true;
+    }
+
+    if (
+      user?.id === dataDetail?.data?.orderItems?.[0]?.order?.user_id &&
+      accessToken
+    ) {
+      return true;
+    }
+
+    return false;
+  }, [user, dataDetail?.data?.id]);
+
   useEffect(() => {
     if (dataDetail) {
       form.setFieldsValue({
@@ -52,6 +82,26 @@ const DetailPage = () => {
       });
     }
   }, [data]);
+
+  const handleAddToCart = () => {
+    if (!dataDetail?.data) {
+      message.error("Không thể thêm vào giỏ hàng!");
+      return;
+    }
+    const cartKey = "cart";
+    // Get current cart from localStorage
+    const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+    // Check if document already exists in cart
+    const exists = cart.some((item: any) => item.id === dataDetail.data.id);
+    if (exists) {
+      message.info("Tài liệu đã có trong giỏ hàng!");
+      return;
+    }
+    // Add document to cart and save
+    cart.push(dataDetail.data);
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    message.success("Đã thêm vào giỏ hàng!");
+  };
 
   return (
     <Spin spinning={isFetching || isFetchingRelated}>
@@ -68,7 +118,7 @@ const DetailPage = () => {
                       )
                     : "https://www.testo.com/images/not-available.jpg"
                 }
-                className=" !w-full object-cover"
+                className="!w-full object-cover"
                 preview
               />
             </div>
@@ -105,7 +155,7 @@ const DetailPage = () => {
                       "vi-VN"
                     )} VNĐ`}
               </Typography.Text>
-              {dataDetail?.data?.file_path && (
+              {dataDetail?.data?.file_path && isViewDocumentFile && (
                 <Link
                   to={`${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`}
                   target="_blank"
@@ -117,30 +167,44 @@ const DetailPage = () => {
               )}
             </div>
 
+            {!isViewDocumentFile && (
+              <div className="mt-4">
+                <Button
+                  type="primary"
+                  onClick={handleAddToCart}
+                  disabled={!dataDetail?.data}
+                >
+                  Thêm vào giỏ hàng
+                </Button>
+              </div>
+            )}
+
             {/* Tabs: Mở tài liệu và Hình ảnh */}
             <div className="mt-4">
               <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                <TabPane tab="Mở tài liệu" key="document">
-                  {dataDetail?.data?.file_path &&
-                  /\.(jpe?g|png|gif|bmp|webp)$/i.test(
-                    dataDetail?.data?.file_path
-                  ) ? (
-                    <Image
-                      src={handleGetFile(dataDetail?.data?.file_path)}
-                      className="!max-h-[300px] !w-full object-cover"
-                    />
-                  ) : (
-                    <iframe
-                      src={`https://docs.google.com/gview?url=${encodeURIComponent(
-                        `${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`
-                      )}&embedded=true`}
-                      width="100%"
-                      height="1000px"
-                      frameBorder="0"
-                      title="Document Preview"
-                    />
-                  )}
-                </TabPane>
+                {isViewDocumentFile && (
+                  <TabPane tab="Chi tiết tài liệu" key="document">
+                    {dataDetail?.data?.file_path &&
+                    /\.(jpe?g|png|gif|bmp|webp)$/i.test(
+                      dataDetail?.data?.file_path
+                    ) ? (
+                      <Image
+                        src={handleGetFile(dataDetail?.data?.file_path)}
+                        className="!max-h-[300px] !w-full object-cover"
+                      />
+                    ) : (
+                      <iframe
+                        src={`https://docs.google.com/gview?url=${encodeURIComponent(
+                          `${process.env.REACT_APP_SEVER_URL}/${dataDetail?.data?.file_path}`
+                        )}&embedded=true`}
+                        width="100%"
+                        height="1000px"
+                        frameBorder="0"
+                        title="Document Preview"
+                      />
+                    )}
+                  </TabPane>
+                )}
                 <TabPane tab="Hình ảnh" key="images">
                   {dataDetail?.data?.fileImages?.length ? (
                     <List
@@ -165,47 +229,11 @@ const DetailPage = () => {
           </div>
 
           <div className="bg-[#fff] p-5 w-1/5">
-            <Typography.Title level={4}>Tài liệu liên quan</Typography.Title>
+            <h3 className="widget-title mb-5">
+              <span>Tài liệu liên quan</span>
+            </h3>
             <Spin spinning={isFetchingRelated}>
-              {relatedDocuments.length > 0 ? (
-                <List
-                  grid={{ gutter: 16, xs: 24, sm: 24, md: 24, lg: 24 }}
-                  dataSource={relatedDocuments}
-                  renderItem={(doc) => (
-                    <List.Item>
-                      <Link to={`/document/${doc?.id}`}>
-                        <div className="border rounded-lg p-4 hover:shadow-md">
-                          <Image
-                            src={
-                              doc?.fileImages?.[0]?.image_path
-                                ? handleGetFile(
-                                    doc?.fileImages?.[0]?.image_path || ""
-                                  )
-                                : "https://www.testo.com/images/not-available.jpg"
-                            }
-                            className="!max-h-[150px] !w-full object-cover mb-2"
-                            preview={false}
-                          />
-
-                          <div className="font-semibold text-left">
-                            {doc?.title || ""}
-                          </div>
-                          <Typography.Text>
-                            Giá:{" "}
-                            {doc?.price === 0
-                              ? "Miễn phí"
-                              : `${Number(doc?.price).toLocaleString(
-                                  "vi-VN"
-                                )} VNĐ`}
-                          </Typography.Text>
-                        </div>
-                      </Link>
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                <Typography.Text>Không có tài liệu liên quan</Typography.Text>
-              )}
+              <DocumentRelatedWrapper relatedDocuments={relatedDocuments} />
             </Spin>
           </div>
         </div>

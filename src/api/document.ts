@@ -7,12 +7,38 @@ import { TypeUniversity } from "./university";
 
 const injectedRtkApi = apiWrapper.injectEndpoints({
   endpoints: (build) => ({
+    getDocumentPreview: build.query({
+      query: (queryArg) => ({
+        url: `/document/preview/${queryArg?.id}`,
+        params: queryArg,
+      }),
+    }),
     getListDocument: build.query<
       GetListDocumentApiResponse | ErrorResponse,
       GetListDocumentApiArg
     >({
       query: (queryArg) => ({
         url: "/document",
+        params: queryArg,
+      }),
+      providesTags: ["document"],
+    }),
+    getPurchasedDocument: build.query<
+      GetListDocumentApiResponse | ErrorResponse,
+      GetListDocumentApiArg
+    >({
+      query: (queryArg) => ({
+        url: "/documents/purchased",
+        params: queryArg,
+      }),
+      providesTags: ["document"],
+    }),
+    getTopViewDocument: build.query<
+      GetListDocumentApiResponse | ErrorResponse,
+      GetListDocumentApiArg
+    >({
+      query: (queryArg) => ({
+        url: "/document/top-viewed",
         params: queryArg,
       }),
       providesTags: ["document"],
@@ -31,6 +57,17 @@ const injectedRtkApi = apiWrapper.injectEndpoints({
         url: `/document/${queryArg?.id}`,
         params: queryArg,
       }),
+    }),
+    payment: build.mutation<
+      PostDocumentApiResponse | ErrorResponse,
+      { document_ids: number[]; referral_code?: string }
+    >({
+      query: (data) => ({
+        url: "/document/payment",
+        body: data,
+        method: "POST",
+      }),
+      invalidatesTags: ["document"],
     }),
     postDocument: build.mutation<
       PostDocumentApiResponse | ErrorResponse,
@@ -112,6 +149,7 @@ export type GetListDocumentApiArg = {
   subject_id?: number;
   category_id?: number;
   university_id?: number;
+  user_id?: number;
   status?: string;
 };
 
@@ -137,6 +175,25 @@ export type TypeDocument = {
   user?: TypeUser;
   documentCategories: DocumentCategoryType[];
   fileImages?: FileImages[];
+  orderItems?: OrderItem[];
+};
+
+export type OrderItem = {
+  id?: number;
+  document_id?: number;
+  order_id?: number;
+  order?: TypeOrder;
+};
+
+export type TypeOrder = {
+  id?: number;
+  user_id?: number;
+  total_amount?: number;
+  status?: UserStatusType;
+  created_at?: string;
+  updatedAt?: string;
+
+  user?: TypeUser;
 };
 
 export type FileImages = {
@@ -163,12 +220,19 @@ export type TypeCategory = {
 
 export { injectedRtkApi as DocumentApi };
 export const {
+  useGetPurchasedDocumentQuery,
+  useLazyGetPurchasedDocumentQuery,
+  useGetDocumentPreviewQuery,
+  useLazyGetDocumentPreviewQuery,
+  useGetTopViewDocumentQuery,
+  useLazyGetTopViewDocumentQuery,
   useGetListDocumentQuery,
   useLazyGetListDocumentQuery,
   useGetRelatedDocumentsQuery,
   useLazyGetRelatedDocumentsQuery,
   useGetDetailDocumentQuery,
   useLazyGetDetailDocumentQuery,
+  usePaymentMutation,
   usePostDocumentMutation,
   usePutDocumentMutation,
   useDeleteDocumentMutation,

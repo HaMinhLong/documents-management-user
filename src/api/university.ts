@@ -98,7 +98,7 @@ export type GetListUniversityApiResponse = {
 };
 export type GetListUniversityApiArg = {
   keyword?: string;
-  status?: number;
+  status?: string;
   page?: number;
   limit?: number;
 };

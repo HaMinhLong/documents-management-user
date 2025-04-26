@@ -8,7 +8,7 @@ import {
   MenuProps,
   Space,
 } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   LogoutOutlined,
@@ -32,7 +32,9 @@ interface PropsType {
 
 const PageContainer = ({ children }: PropsType) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -46,6 +48,22 @@ const PageContainer = ({ children }: PropsType) => {
       label: <Link to="/user/profile">Cài đặt tài khoản</Link>,
       key: "1",
       icon: <SettingOutlined />,
+    },
+    {
+      label: <Link to="/recharge">Nạp tiền</Link>,
+      key: "3",
+    },
+    {
+      label: <Link to="/upload-document">Tải tài liệu</Link>,
+      key: "4",
+    },
+    {
+      label: <Link to="/purchased-document">Tài liệu đã mua</Link>,
+      key: "5",
+    },
+    {
+      label: <Link to="/order">Giỏ hàng</Link>,
+      key: "6",
     },
     {
       label: "Đăng xuất",
@@ -64,8 +82,10 @@ const PageContainer = ({ children }: PropsType) => {
 
         <div className="w-[300px] mx-4">
           <Search
-            placeholder="Tìm kiếm tài liệu, môn học..."
-            onSearch={(value) => console.log(value)}
+            placeholder="Tìm kiếm tài liệu..."
+            onSearch={(value) => {
+              navigate(`/search?title=${value}`);
+            }}
             style={{ width: 250 }}
             enterButton
             className="[&_input]:h-8"
@@ -74,7 +94,7 @@ const PageContainer = ({ children }: PropsType) => {
 
         <SiderPage />
 
-        {user ? (
+        {user && accessToken ? (
           <div className="flex flex-end p-[10px] z-[1001] cursor-pointer min-w-[200px]">
             <Dropdown menu={{ items }} placement="bottom">
               <Space>

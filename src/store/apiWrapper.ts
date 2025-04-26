@@ -19,7 +19,10 @@ const axiosBaseQuery =
     BaseQueryApi,
     unknown
   > =>
-  async ({ url, method, body, params, headers }, { getState, signal }) => {
+  async (
+    { url, method, body, params, headers },
+    { getState, signal, dispatch }
+  ) => {
     try {
       const store = getState() as RootState;
 
@@ -54,6 +57,7 @@ const axiosBaseQuery =
       const err = axiosError as AxiosError;
 
       if (err.response?.status === 401 && localStorage.getItem("accessToken")) {
+        dispatch({ type: "auth/logout" });
         window.location.href = "/login";
         localStorage.removeItem("accessToken");
       }
@@ -79,6 +83,7 @@ export const apiWrapper = createApi({
     "document",
     "transaction",
     "category",
+    "vnpay",
   ],
   endpoints: () => ({}),
 });
