@@ -1,46 +1,73 @@
-# Getting Started with Create React App
+# Documents Management - User Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Ảnh giới thiệu
 
-## Available Scripts
+Frontend dự án quản lý tài liệu cho người dùng:
 
-In the project directory, you can run:
+- Đăng nhập/Đăng ký
+- Quản lý tài liệu
+- Xem, tải và chuyển đổi định dạng tài liệu
 
-### `yarn start`
+Frontend dùng **React**, **TypeScript**, **TailwindCSS** và **CRACO**.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Các công nghệ sử dụng
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- React 18
+- TypeScript
+- TailwindCSS
+- Axios
+- React Router DOM
 
-### `yarn test`
+## Hướng dẫn cài đặt
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone project:
 
-### `yarn build`
+```bash
+git clone https://github.com/HaMinhLong/documents-management-user.git
+cd documents-management-user
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Cài dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+yarn install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Tạo file `.env` từ `.env.example` và điền thông tin API backend.
 
-### `yarn eject`
+4. Chạy dự án:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+yarn start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. Truy cập: [http://localhost:3000](http://localhost:3000)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Scripts hỗ trợ
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+| Lệnh         | Mô tả                     |
+| :----------- | :------------------------ |
+| `yarn start` | Chạy ứng dụng development |
+| `yarn build` | Build ứng dụng production |
+| `yarn test`  | Chạy unit tests           |
 
-## Learn More
+## Cấu trúc thư mục
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+├── public/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── utils/
+│   └── App.tsx
+├── .env.example
+├── tailwind.config.js
+├── craco.config.js
+└── tsconfig.json
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Ghi chú
+
+- Cần cài đặt Node.js >= 18.x và Yarn.
+- Backend API URL cần được định nghĩa trong `.env`.
